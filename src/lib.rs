@@ -61,6 +61,7 @@ pub struct RegisterService {
     pub Tags: Vec<String>,
     pub Port: u16,
     pub Address: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub Check: Option<Check>,
 }
 
@@ -68,7 +69,9 @@ pub struct RegisterService {
 pub struct Check {
     pub TTL: String,
     pub Interval: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub HTTP: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub Script: Option<String>,
     pub DeregisterCriticalServiceAfter: String,
 }
@@ -136,6 +139,7 @@ impl Client {
         let mut req = Request::new(method, uri);
         req.headers_mut().set(ContentType::json());
         req.headers_mut().set(ContentLength(json.as_bytes().len() as u64));
+        //println!("SENDING {}", json);
         req.set_body(json);
 
         let client = self.client.clone();
@@ -188,7 +192,7 @@ impl<'a> KV<'a> {
 
 #[cfg(test)]
 mod tests {
-    use super::{Client, RegisterService};
+    use super::{Client, RegisterService, Check};
     use tokio_core::reactor::Core;
     #[test]
     fn it_works() {
@@ -200,7 +204,13 @@ mod tests {
             Tags: vec![],
             Port: 1488,
             Address: "127.0.0.1".to_string(),
-            Check: None,
+            Check: Some(Check {
+                HTTP: Some("http://127.0.0.1:9999/health".into()),
+                Interval: "1s".into(),
+                Script: None,
+                TTL: "1m".into(),
+                DeregisterCriticalServiceAfter: "24h".into(),
+            })
         };
         let res = core.run(client.agent().register(sr)).unwrap();
         println!("{:?}", res);
