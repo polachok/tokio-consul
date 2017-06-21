@@ -67,12 +67,13 @@ pub struct RegisterService {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Check {
-    pub TTL: String,
-    pub Interval: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub HTTP: Option<String>,
+    pub ttl: Option<String>,
+    pub interval: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub Script: Option<String>,
+    pub http: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub script: Option<String>,
     pub DeregisterCriticalServiceAfter: String,
 }
 
@@ -202,13 +203,13 @@ mod tests {
             ID: "hello".to_string(),
             Name: "test".to_string(),
             Tags: vec![],
-            Port: 1488,
+            Port: 9999,
             Address: "127.0.0.1".to_string(),
             Check: Some(Check {
-                HTTP: Some("http://127.0.0.1:9999/health".into()),
-                Interval: "1s".into(),
-                Script: None,
-                TTL: "1m".into(),
+                http: Some("http://127.0.0.1:9999/health".into()),
+                interval: "1s".into(),
+                script: None,
+                ttl: None,
                 DeregisterCriticalServiceAfter: "24h".into(),
             })
         };
