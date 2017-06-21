@@ -118,7 +118,6 @@ impl Client {
         let uri_str = format!("{}{}", self.base_uri, path);
         let uri = uri_str.parse().unwrap();
 
-        println!("URI IS {}", uri);
         let mut req = Request::new(method, uri);
         req.headers_mut().set(type_);
         req.headers_mut().set(ContentLength(body.len() as u64));
