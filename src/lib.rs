@@ -66,11 +66,11 @@ pub struct RegisterService {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Check {
-    TTL: String,
-    Interval: String,
-    HTTP: Option<String>,
-    Script: Option<String>,
-    DeregisterCriticalServiceAfter: String,
+    pub TTL: String,
+    pub Interval: String,
+    pub HTTP: Option<String>,
+    pub Script: Option<String>,
+    pub DeregisterCriticalServiceAfter: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
