@@ -178,11 +178,10 @@ impl<'a> KV<'a> {
         .map_err(|e| e.into())
         .and_then(|(status, body)| {
             if status.is_success() {
-                use std::ops::Deref;
-                if body.deref() == b"true\n" {
+                if body.starts_with(b"true") {
                     return Ok(true);
                 }
-                if body.deref() == b"false\n" {
+                if body.starts_with(b"false") {
                     return Ok(false);
                 }
             }
