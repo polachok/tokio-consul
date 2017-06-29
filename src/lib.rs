@@ -1,5 +1,3 @@
-#![allow(non_snake_case)]
-
 extern crate futures;
 extern crate hyper;
 extern crate tokio_core;
@@ -33,36 +31,49 @@ impl From<hyper::Error> for Error {
 /// Node represents a node
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Node {
-    pub Node: String,
-    pub Address: String,
+    #[serde(rename = "Node")]
+    pub node: String,
+    #[serde(rename = "Address")]
+    pub address: String,
 }
 
 /// Service represents a service
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Service {
-    pub ID: String,
-    pub Service: String,
-    pub Tags: Option<Vec<String>>,
-    pub Port: u32,
+    #[serde(rename = "ID")]
+    pub id: String,
+    #[serde(rename = "Service")]
+    pub service: String,
+    #[serde(rename = "Tags")]
+    pub tags: Option<Vec<String>>,
+    #[serde(rename = "Port")]
+    pub port: u32,
 }
 
 /// HealthService is used for the health service
 #[derive(Serialize, Deserialize)]
 pub struct HealthService{
-    pub Node: Node,
-    pub Service: Service,
+    #[serde(rename = "Node")]
+    pub node: Node,
+    #[serde(rename = "Service")]
+    pub service: Service,
 }
 
 /// Service represents a service
 #[derive(Serialize, Deserialize, Debug)]
 pub struct RegisterService {
-    pub ID: String,
-    pub Name: String,
-    pub Tags: Vec<String>,
-    pub Port: u16,
-    pub Address: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub Check: Option<Check>,
+    #[serde(rename = "ID")]
+    pub id: String,
+    #[serde(rename = "Name")]
+    pub name: String,
+    #[serde(rename = "Tags")]
+    pub tags: Vec<String>,
+    #[serde(rename = "Port")]
+    pub port: u16,
+    #[serde(rename = "Address")]
+    pub address: String,
+    #[serde(skip_serializing_if = "Option::is_none", rename = "Check")]
+    pub check: Option<Check>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -74,16 +85,8 @@ pub struct Check {
     pub http: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub script: Option<String>,
-    pub DeregisterCriticalServiceAfter: String,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct TtlHealthCheck {
-    pub ServiceID: String,
-    pub ID: String,
-    pub Name: String,
-    pub Notes: String,
-    pub TTL: String
+    #[serde(rename = "DeregisterCriticalServiceAfter")]
+    pub deregister_critical_service_after: String,
 }
 
 /// Client for the consul API
